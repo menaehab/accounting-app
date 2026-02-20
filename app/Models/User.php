@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -60,5 +61,25 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    public function transactionsPaid(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'paid_by_user_id');
+    }
+
+    public function createdTransactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'created_by_user_id');
+    }
+
+    public function personalFundEntries(): HasMany
+    {
+        return $this->hasMany(PersonalFundEntry::class);
+    }
+
+    public function createdPersonalFundEntries(): HasMany
+    {
+        return $this->hasMany(PersonalFundEntry::class, 'created_by_user_id');
     }
 }
